@@ -24,7 +24,13 @@ import es.salesianos.model.User;
 // http://localhost:8080/api/v1/user/delete/equipo/
 public class AlumnoController {
 	List<Alumno> alumnos = new ArrayList<Alumno>();
-
+	
+	@PostMapping
+	@RequestMapping(value = "/FILL/")
+	public ResponseEntity<Alumno> fill(@RequestBody Alumno alumnoReq) {
+		addAlumnos(alumnos);
+		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
 	@GetMapping
 	@RequestMapping(value = "/DELETE/", method = RequestMethod.GET)
 	public ResponseEntity<Alumno> delete(@RequestParam(required = true) int id) {
@@ -36,7 +42,7 @@ public class AlumnoController {
 	
 	
 	@GetMapping
-	@RequestMapping(value = "/UPDATE/{id}/", method = RequestMethod.GET)
+	@RequestMapping(value = "/{id}/", method = RequestMethod.GET)
 	public ResponseEntity<Alumno> update(@PathVariable int id, @RequestParam String fct) {
 		Alumno alumnoUpdate = new Alumno();
 		alumnoUpdate = findAlumno(id, alumnoUpdate);
@@ -66,7 +72,8 @@ public class AlumnoController {
 	@GetMapping
 	@RequestMapping(value = "/LIST")
 	public ResponseEntity<List<Alumno>> ListWithFilter() {
-		addAlumnos(alumnos);		
+		if(alumnos.isEmpty())
+			addAlumnos(alumnos);		
 		return new ResponseEntity<>(alumnos, HttpStatus.OK);
 	}
 
